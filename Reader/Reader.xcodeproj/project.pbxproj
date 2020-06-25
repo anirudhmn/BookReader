@@ -12,9 +12,7 @@
 		77DC3E2024A41E410084A9B5 /* TextExtractorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC3E1A24A41E410084A9B5 /* TextExtractorViewController.swift */; };
 		77DC3E2124A41E410084A9B5 /* EpubDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC3E1B24A41E410084A9B5 /* EpubDetailViewController.swift */; };
 		77DC3E2224A41E410084A9B5 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC3E1C24A41E410084A9B5 /* ImageCell.swift */; };
-		77DC3E2324A41E410084A9B5 /* The Silver Chair.epub in Resources */ = {isa = PBXBuildFile; fileRef = 77DC3E1D24A41E410084A9B5 /* The Silver Chair.epub */; };
 		77DC3E2424A41E410084A9B5 /* CellUtitlities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC3E1E24A41E410084A9B5 /* CellUtitlities.swift */; };
-		77DC3E2524A41E410084A9B5 /* Flowers for Algernon.epub in Resources */ = {isa = PBXBuildFile; fileRef = 77DC3E1F24A41E410084A9B5 /* Flowers for Algernon.epub */; };
 		77EC67F524A41D1200C89E55 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC67F424A41D1200C89E55 /* AppDelegate.swift */; };
 		77EC67F724A41D1200C89E55 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC67F624A41D1200C89E55 /* SceneDelegate.swift */; };
 		77EC67F924A41D1200C89E55 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC67F824A41D1200C89E55 /* ViewController.swift */; };
@@ -44,9 +42,7 @@
 		77DC3E1A24A41E410084A9B5 /* TextExtractorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextExtractorViewController.swift; sourceTree = "<group>"; };
 		77DC3E1B24A41E410084A9B5 /* EpubDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EpubDetailViewController.swift; sourceTree = "<group>"; };
 		77DC3E1C24A41E410084A9B5 /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
-		77DC3E1D24A41E410084A9B5 /* The Silver Chair.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "The Silver Chair.epub"; sourceTree = "<group>"; };
 		77DC3E1E24A41E410084A9B5 /* CellUtitlities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellUtitlities.swift; sourceTree = "<group>"; };
-		77DC3E1F24A41E410084A9B5 /* Flowers for Algernon.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Flowers for Algernon.epub"; sourceTree = "<group>"; };
 		77DC3E2724A41E7F0084A9B5 /* Reader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Reader.entitlements; sourceTree = "<group>"; };
 		77EC67F124A41D1200C89E55 /* Reader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77EC67F424A41D1200C89E55 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -85,15 +81,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		77DC3E2624A41E560084A9B5 /* Books */ = {
-			isa = PBXGroup;
-			children = (
-				77DC3E1D24A41E410084A9B5 /* The Silver Chair.epub */,
-				77DC3E1F24A41E410084A9B5 /* Flowers for Algernon.epub */,
-			);
-			name = Books;
-			sourceTree = "<group>";
-		};
 		77EC67E824A41D1200C89E55 = {
 			isa = PBXGroup;
 			children = (
@@ -118,7 +105,6 @@
 			isa = PBXGroup;
 			children = (
 				77DC3E2724A41E7F0084A9B5 /* Reader.entitlements */,
-				77DC3E2624A41E560084A9B5 /* Books */,
 				77EC67F424A41D1200C89E55 /* AppDelegate.swift */,
 				77EC67F624A41D1200C89E55 /* SceneDelegate.swift */,
 				7714608624A49A8F00D06549 /* InitialViewController.swift */,
@@ -250,8 +236,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77DC3E2324A41E410084A9B5 /* The Silver Chair.epub in Resources */,
-				77DC3E2524A41E410084A9B5 /* Flowers for Algernon.epub in Resources */,
 				77EC680124A41D1300C89E55 /* LaunchScreen.storyboard in Resources */,
 				77EC67FE24A41D1300C89E55 /* Assets.xcassets in Resources */,
 				77EC67FC24A41D1200C89E55 /* Main.storyboard in Resources */,

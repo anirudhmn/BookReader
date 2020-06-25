@@ -12,34 +12,102 @@ import EpubExtractor
 import Firebase
 
 class ViewController: UIViewController {
+    
+    @IBOutlet var tableView: UITableView!
+    
     var epubs = [("Books",[""])]
+    var refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let fm = FileManager.default
-        let path = Bundle.main.resourcePath!
-
-        do {
-            let items = try fm.contentsOfDirectory(atPath: path)
-
-            for item in items {
-                if item.contains("epub") {
-                    if self.epubs[0].1[0]=="" {
-                        self.epubs[0].1[0] = String(item.split(separator: ".")[0])
-                    } else {
-                        self.epubs[0].1.append(String(item.split(separator: ".")[0]))
+        if book {
+            let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addBook))
+            navigationItem.rightBarButtonItems = [addButton]
+        }
+        
+        updateBooks()
+        
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        tableView.addSubview(refreshControl)
+    }
+    
+    func updateBooks() {
+        epubs = [("Books",[""])]
+        if book {
+            let fileManager = FileManager.default
+            let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            do {
+                let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+                for i in fileURLs {
+                    if i.absoluteString.contains("epub") {
+                        let a = i.absoluteString.split(separator: "/")
+                        let b = a[a.count-1]
+                        let c = b.replacingOccurrences(of: "%20", with: " ")
+                        
+                        if self.epubs[0].1[0]=="" {
+                            self.epubs[0].1[0] = String(c.split(separator: ".")[0])
+                        } else {
+                            self.epubs[0].1.append(String(c.split(separator: ".")[0]))
+                        }
                     }
                 }
+            } catch {
+                print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
             }
-        } catch {
-            print(error)
+            
+            let ref = Database.database().reference(fromURL: "FIREBASEURL").child("TotalBooks")
+            var v =  [String:String]()
+            for i in 0...epubs[0].1.count-1{
+                v["\(i)"] = epubs[0].1[i]
+            }
+            
+            ref.removeValue()
+            ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
+                if err != nil {
+                    print(err)
+                    return
+                }
+                
+                self.tableView.reloadData()
+                self.refreshControl.endRefreshing()
+            })
+        } else {
+            let ref = Database.database().reference(fromURL: "FIREBASEURL").child("TotalBooks")
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                var i = 0
+                for child in snapshot.children {
+                    let snap = child as! DataSnapshot
+                    if self.epubs[0].1[0]=="" {
+                        self.epubs[0].1[0] = "\(snap.value ?? "0")"
+                    } else {
+                        self.epubs[0].1.append("\(snap.value ?? "0")")
+                    }
+                    i+=1
+                }
+                
+                self.tableView.reloadData()
+                self.refreshControl.endRefreshing()
+            })
         }
-                        
+    }
+    
+    @objc func addBook() {
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["epub"], in: .import)
+        documentPicker.delegate = self
+        documentPicker.allowsMultipleSelection = false
+        present(documentPicker, animated: true, completion: nil)
+    }
+    
+    @objc func refresh(_ sender: AnyObject) {
+        updateBooks()
     }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.epubs.count
     }
@@ -69,7 +137,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let detailVC = self.storyboard?.instantiateViewController(withIdentifier: "DetailVC") as! EpubDetailViewController
             detailVC.epubName = self.epubs[indexPath.section].1[indexPath.item]
             
-            let ref = Database.database().reference(fromURL: "URL").child(detailVC.epubName!)
+            let ref = Database.database().reference(fromURL: "FIREBASEURL").child(detailVC.epubName!)
             var first = true
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 for child in snapshot.children {
@@ -99,4 +167,34 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
+
+extension ViewController: UIDocumentPickerDelegate {
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        
+        guard let selectedFileURL = urls.first else {
+            return
+        }
+        
+        let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let sandboxFileURL = dir.appendingPathComponent(selectedFileURL.lastPathComponent)
+        
+        if FileManager.default.fileExists(atPath: sandboxFileURL.path) {
+            print("Already exists! Do nothing")
+        }
+        else {
+            
+            do {
+                try FileManager.default.copyItem(at: selectedFileURL, to: sandboxFileURL)
+                print("Copied file!")
+                updateBooks()
+            }
+            catch {
+                print("Error: \(error)")
+            }
+        }
+    }
+}
+    
+
 

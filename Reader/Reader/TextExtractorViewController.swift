@@ -40,10 +40,12 @@ class TextExtractorViewController: UIViewController {
         rightPage.attributedText = NSAttributedString(string: rightPage.text ?? "ok", attributes: attributes)
         
         var sections = extractText()
-        sections.remove(at: 0)
+        if sections.count > 1 {
+            sections.remove(at: 0)
+        }
         (book, totalPages) = getPagedBook(sections: sections)
         
-        let ref = Database.database().reference(fromURL: "URL").child(epub.title!)
+        let ref = Database.database().reference(fromURL: "FIREBASEURL").child(epub.title!)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             for child in snapshot.children {
                 let snap = child as! DataSnapshot
@@ -117,9 +119,9 @@ class TextExtractorViewController: UIViewController {
         }
         
         pagesTotalLabel.text = "Page \(currentPage)/\(totalPages)"
-        pagesSectionLabel.text = "\(pagesSection-page+2) pages left in this section"
+        pagesSectionLabel.text = "\(pagesSection-page) pages left in this section"
         
-        let ref = Database.database().reference(fromURL: "URL").child(epub.title!)
+        let ref = Database.database().reference(fromURL: "FIREBASEURL").child(epub.title!)
         let v = ["page":"\(page)", "section":"\(section)", "current":"\(currentPage)"]
         ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
             if err != nil {
@@ -132,6 +134,7 @@ class TextExtractorViewController: UIViewController {
     func getPagedBook(sections: [String]) -> ([[String]], Int) {
         var book:[[String]] = []
         var pages = 0
+        
         for i in 0...sections.count-1 {
             let screenSize = self.view.frame.size
             let sectionText = sections[i]
@@ -154,7 +157,9 @@ class TextExtractorViewController: UIViewController {
     func extractText() -> [String] {
         var sections = [String]()
         
+        var i = 0
         for spine in epub.spines {
+            i += 1
             do {
                 sections.append(try epub.content(forSpine: spine))
             } catch {

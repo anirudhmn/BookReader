@@ -19,7 +19,14 @@ class EpubDetailViewController: UIViewController {
             self.epubExtractor.delegate = self
             let destinationPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
             let destinationURL = URL(string: destinationPath!)?.appendingPathComponent(epubName!)
-            self.epubExtractor.extractEpub(epubURL: Bundle.main.url(forResource: epubName, withExtension: "epub")!, destinationFolder: destinationURL!)
+            
+            let fileManager = FileManager.default
+            let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let a = epubName?.replacingOccurrences(of: " ", with: "%20")
+            let b = documentsURL.absoluteString + a! + ".epub"
+            let fileURL = URL(string: b)!
+                            
+            self.epubExtractor.extractEpub(epubURL: fileURL, destinationFolder: destinationURL!)
         }
     }
     
@@ -61,6 +68,7 @@ class EpubDetailViewController: UIViewController {
             return result
         })
     }
+    
 }
 
 private let detailSection = 0

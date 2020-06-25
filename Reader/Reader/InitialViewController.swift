@@ -27,4 +27,3 @@ class InitialViewController: UIViewController {
         self.performSegue(withIdentifier: "start", sender: self)
     }
 }
-    

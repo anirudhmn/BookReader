@@ -32,7 +32,7 @@ class RemoteViewController: UIViewController {
         if sender.state == .ended {
             switch sender.direction {
             case .right:
-                let ref = Database.database().reference(fromURL: "URL").child(epubName)
+                let ref = Database.database().reference(fromURL: "FIREBASEURL").child(epubName)
                 
                 var swipe = "left"
                 if doubleL {
@@ -50,7 +50,7 @@ class RemoteViewController: UIViewController {
                     }
                 })
             case .left:
-                let ref = Database.database().reference(fromURL: "URL").child(epubName)
+                let ref = Database.database().reference(fromURL: "FIREBASEURL").child(epubName)
                 
                 var swipe = "right"
                 if doubleR {
