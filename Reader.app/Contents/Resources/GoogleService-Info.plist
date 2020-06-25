@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>885201644337-folq7ch064gi063rjtb0kpngv753bfak.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.885201644337-folq7ch064gi063rjtb0kpngv753bfak</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDCUgYOy3Sn4oN99eUA8w3VZy19bLAYIz0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>885201644337</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.Anirudh.Reader</string>
+	<key>PROJECT_ID</key>
+	<string>epubreader-6d14e</string>
+	<key>STORAGE_BUCKET</key>
+	<string>epubreader-6d14e.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:885201644337:ios:74c2e96e7d6491f4ebde10</string>
+	<key>DATABASE_URL</key>
+	<string>https://epubreader-6d14e.firebaseio.com</string>
+</dict>
+</plist>
