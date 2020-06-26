@@ -57,7 +57,7 @@ class ViewController: UIViewController {
                 print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
             }
             
-            let ref = Database.database().reference(fromURL: "FIREBASEURL").child("TotalBooks")
+            let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child("TotalBooks")
             var v =  [String:String]()
             for i in 0...epubs[0].1.count-1{
                 v["\(i)"] = epubs[0].1[i]
@@ -74,7 +74,7 @@ class ViewController: UIViewController {
                 self.refreshControl.endRefreshing()
             })
         } else {
-            let ref = Database.database().reference(fromURL: "FIREBASEURL").child("TotalBooks")
+            let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child("TotalBooks")
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 var i = 0
                 for child in snapshot.children {
@@ -137,7 +137,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let detailVC = self.storyboard?.instantiateViewController(withIdentifier: "DetailVC") as! EpubDetailViewController
             detailVC.epubName = self.epubs[indexPath.section].1[indexPath.item]
             
-            let ref = Database.database().reference(fromURL: "FIREBASEURL").child(detailVC.epubName!)
+            let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(detailVC.epubName!)
             var first = true
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 for child in snapshot.children {

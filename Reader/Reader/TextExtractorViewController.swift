@@ -64,7 +64,7 @@ class TextExtractorViewController: UIViewController {
         }
         (book, totalPages) = getPagedBook(sections: sections)
         
-        let ref = Database.database().reference(fromURL: "FIREBASEURL").child(epubName)
+        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epubName)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             for child in snapshot.children {
                 let snap = child as! DataSnapshot
@@ -140,7 +140,7 @@ class TextExtractorViewController: UIViewController {
         pagesTotalLabel.text = "Page \(currentPage)/\(totalPages)"
         pagesSectionLabel.text = "\(pagesSection-page) pages left in this section"
         
-        let ref = Database.database().reference(fromURL: "FIREBASEURL").child(epub.title!)
+        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epub.title!)
         let v = ["page":"\(page)", "section":"\(section)", "current":"\(currentPage)"]
         ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
             if err != nil {
