@@ -181,14 +181,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="400" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Ifc-8q-xz6">
-                                <rect key="frame" x="20" y="20" width="335" height="525"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="400" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ifc-8q-xz6">
+                                <rect key="frame" x="20" y="27" width="335" height="518"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="400" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="eJ4-h8-eXf">
-                                <rect key="frame" x="445" y="20" width="335" height="525"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="400" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eJ4-h8-eXf">
+                                <rect key="frame" x="445" y="27" width="335" height="518"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -228,11 +228,11 @@
                             <constraint firstItem="rG3-O2-Cx6" firstAttribute="top" secondItem="4Ea-Ws-88Y" secondAttribute="bottom" constant="20" id="GEU-vN-JDu"/>
                             <constraint firstItem="rG3-O2-Cx6" firstAttribute="top" secondItem="eJ4-h8-eXf" secondAttribute="bottom" constant="55" id="H71-E6-sxw"/>
                             <constraint firstItem="rG3-O2-Cx6" firstAttribute="top" secondItem="2qa-aO-Aq6" secondAttribute="bottom" constant="20" id="Hs9-Rf-4BV"/>
-                            <constraint firstItem="Ifc-8q-xz6" firstAttribute="top" secondItem="Hc1-5d-0FC" secondAttribute="bottom" constant="20" id="JsM-Pg-1iR"/>
+                            <constraint firstItem="Ifc-8q-xz6" firstAttribute="top" secondItem="Hc1-5d-0FC" secondAttribute="bottom" constant="27" id="JsM-Pg-1iR"/>
                             <constraint firstItem="2qa-aO-Aq6" firstAttribute="trailing" secondItem="eJ4-h8-eXf" secondAttribute="trailing" id="M2p-O1-uP9"/>
                             <constraint firstItem="Ifc-8q-xz6" firstAttribute="leading" secondItem="vdY-py-Oun" secondAttribute="leadingMargin" id="ORc-je-pbX"/>
                             <constraint firstItem="lw8-cQ-tTT" firstAttribute="leading" secondItem="Ifc-8q-xz6" secondAttribute="trailing" constant="15" id="RO2-mg-ulm"/>
-                            <constraint firstItem="eJ4-h8-eXf" firstAttribute="top" secondItem="Hc1-5d-0FC" secondAttribute="bottom" constant="20" id="ZSy-41-cNc"/>
+                            <constraint firstItem="eJ4-h8-eXf" firstAttribute="top" secondItem="Hc1-5d-0FC" secondAttribute="bottom" constant="27" id="ZSy-41-cNc"/>
                             <constraint firstItem="4Ea-Ws-88Y" firstAttribute="centerX" secondItem="Ifc-8q-xz6" secondAttribute="centerX" id="d53-lC-bFB"/>
                             <constraint firstItem="lw8-cQ-tTT" firstAttribute="centerY" secondItem="vdY-py-Oun" secondAttribute="centerY" id="fCD-vO-xNe"/>
                             <constraint firstItem="eJ4-h8-eXf" firstAttribute="leading" secondItem="lw8-cQ-tTT" secondAttribute="trailing" constant="15" id="h0H-rk-bRa"/>

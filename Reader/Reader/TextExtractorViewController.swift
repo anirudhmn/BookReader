@@ -18,6 +18,7 @@ class TextExtractorViewController: UIViewController {
     @IBOutlet var pagesSectionLabel: UILabel!
     
     var epub: Epub!
+    var epubName = ""
     var section = 0
     var page = 0
     var book: [[String]] = [[String]]()
@@ -27,17 +28,35 @@ class TextExtractorViewController: UIViewController {
     var currentPage = 0
     var pagesSection = 0
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        UIApplication.shared.isIdleTimerDisabled = true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let style = NSMutableParagraphStyle()
         style.lineSpacing = spacing
+        style.alignment = .justified
         
         let font = UIFont(name: "Georgia", size: 22)
         
         let attributes = [NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: font]
+        
         leftPage.attributedText = NSAttributedString(string: leftPage.text ?? "ok", attributes: attributes)
         rightPage.attributedText = NSAttributedString(string: rightPage.text ?? "ok", attributes: attributes)
+        
+        leftPage.adjustsFontSizeToFitWidth = true
+        leftPage.minimumScaleFactor = 0.5
+        leftPage.lineBreakMode = .byClipping
+        leftPage.numberOfLines = 0
+        
+        rightPage.adjustsFontSizeToFitWidth = true
+        rightPage.minimumScaleFactor = 0.5
+        rightPage.lineBreakMode = .byClipping
+        rightPage.numberOfLines = 0
         
         var sections = extractText()
         if sections.count > 1 {
@@ -45,7 +64,7 @@ class TextExtractorViewController: UIViewController {
         }
         (book, totalPages) = getPagedBook(sections: sections)
         
-        let ref = Database.database().reference(fromURL: "FIREBASEURL").child(epub.title!)
+        let ref = Database.database().reference(fromURL: "FIREBASEURL").child(epubName)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             for child in snapshot.children {
                 let snap = child as! DataSnapshot
@@ -141,7 +160,7 @@ class TextExtractorViewController: UIViewController {
             
             book.append([String]())
             var sectionLines = sectionText.lines
-            let maxHeight = screenSize.height - 75 - spacing*spacing*1.5999
+            let maxHeight = screenSize.height - (27+55) - spacing*spacing*1.7
             var excerpt = ""
             
             while sectionLines != [] {
@@ -178,7 +197,6 @@ class TextExtractorViewController: UIViewController {
             lines.remove(at: 0)
             if lines.count-1 >= 1 {
                 if excerpt.height(withConstrainedWidth: width, font: font) + lines[1].height(withConstrainedWidth: width, font: font) > maxHeight {
-                    lines.remove(at: 0)
                     break
                 }
             }

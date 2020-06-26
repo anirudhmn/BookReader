@@ -52,6 +52,7 @@ class EpubDetailViewController: UIViewController {
     
         let vc = storyboard?.instantiateViewController(withIdentifier: "TextExtractor") as! TextExtractorViewController
         vc.epub = epub
+        vc.epubName = epubName!
         navigationController?.pushViewController(vc, animated: true)
         
         

@@ -16,6 +16,12 @@ class RemoteViewController: UIViewController {
     var doubleL = false
     var doubleR = false
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        UIApplication.shared.isIdleTimerDisabled = true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
