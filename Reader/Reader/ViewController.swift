@@ -18,6 +18,12 @@ class ViewController: UIViewController {
     var epubs = [("Books",[""])]
     var refreshControl = UIRefreshControl()
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+        tableView.reloadData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -120,12 +126,36 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         var cell = tableView.dequeueReusableCell(withIdentifier: "identifier")
         
         if cell == nil {
-            cell = UITableViewCell(style: .default, reuseIdentifier: "identifier")
+            cell = UITableViewCell(style: .value1, reuseIdentifier: "identifier")
         }
         
-        cell?.textLabel?.text = self.epubs[indexPath.section].1[indexPath.item]
+        let bookTitle = self.epubs[indexPath.section].1[indexPath.item]
+        cell?.textLabel?.text = bookTitle
+        
+        if bookTitle != "" {
+            let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(bookTitle)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                for child in snapshot.children {
+                    print("hello")
+                    let snap = child as! DataSnapshot
+                    if snap.key == "time" {
+                        print("ok")
+                        let s = Int("\(snap.value ?? "0")")
+                        cell?.detailTextLabel?.text = self.getTextFromSeconds(seconds: s ?? 0)
+                    }
+                }
+            })
+        }
         
         return cell!
+    }
+    
+    func getTextFromSeconds(seconds: Int) -> String {
+        let hours = seconds / 3600
+        let minutes = seconds / 60 % 60
+        let seconds = seconds % 60
+        
+        return String(format: "%02i:%02i:%02i", hours, minutes, seconds)
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -149,7 +179,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 
                 if first {
-                    let v = ["page":"0", "section":"0", "current":"0", "flip":"none"]
+                    let v = ["page":"0", "section":"0", "current":"0", "flip":"none", "time":"0"]
                     ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
                         if err != nil {
                             print(err)

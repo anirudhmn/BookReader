@@ -28,6 +28,9 @@ class TextExtractorViewController: UIViewController {
     var currentPage = 0
     var pagesSection = 0
     
+    var startTime = Date.init()
+    var pastTime = 0
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -75,6 +78,8 @@ class TextExtractorViewController: UIViewController {
                     self.section = Int("\(snap.value ?? 0)")!
                 } else if key == "current" {
                     self.currentPage = Int("\(snap.value ?? 0)")!
+                } else if key == "time" {
+                    self.pastTime = Int("\(snap.value ?? 0)")!
                 }
             }
             self.pagesSection = self.book[self.section].count
@@ -140,8 +145,9 @@ class TextExtractorViewController: UIViewController {
         pagesTotalLabel.text = "Page \(currentPage)/\(totalPages)"
         pagesSectionLabel.text = "\(pagesSection-page) pages left in this section"
         
-        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epub.title!)
-        let v = ["page":"\(page)", "section":"\(section)", "current":"\(currentPage)"]
+        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epubName)
+        let time = Date.init().seconds(from: startTime) + pastTime
+        let v = ["page":"\(page)", "section":"\(section)", "current":"\(currentPage)", "time":"\(time)"]
         ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
             if err != nil {
                 print(err)
@@ -219,5 +225,11 @@ extension String {
     
     var lines: [String] {
         return self.components(separatedBy: "\n")
+    }
+}
+
+extension Date {
+    func seconds(from date: Date) -> Int {
+        return Calendar.current.dateComponents([.second], from: date, to: self).second ?? 0
     }
 }

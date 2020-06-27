@@ -19,8 +19,8 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yhC-J5-IOe">
-                                <rect key="frame" x="0.0" y="0.0" width="720" height="560"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="0.0" y="0.0" width="720" height="594"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="vXZ-lx-hvc" id="8U2-Nz-Rvk"/>
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="ceP-vd-zZ1"/>
@@ -31,7 +31,7 @@
                         <constraints>
                             <constraint firstItem="yhC-J5-IOe" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="bUS-pm-xYQ"/>
                             <constraint firstAttribute="trailing" secondItem="yhC-J5-IOe" secondAttribute="trailing" id="qWn-bK-nJ2"/>
-                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="yhC-J5-IOe" secondAttribute="bottom" id="sle-zG-q1E"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="yhC-J5-IOe" secondAttribute="bottom" constant="-34" id="sle-zG-q1E"/>
                             <constraint firstItem="yhC-J5-IOe" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="x6H-jq-K6B"/>
                         </constraints>
                     </view>
@@ -42,7 +42,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="637.60000000000002" y="108.39580209895054"/>
+            <point key="canvasLocation" x="636.23188405797111" y="107.8125"/>
         </scene>
         <!--Initial View Controller-->
         <scene sceneID="ZN6-gu-Amd">
@@ -145,8 +145,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="HMm-k9-Sy9">
-                                <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="0.0" y="0.0" width="800" height="634"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="69t-mv-sWt" id="lZa-xh-BQd"/>
                                     <outlet property="delegate" destination="69t-mv-sWt" id="ADi-UL-Bv2"/>
@@ -155,7 +155,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="FLn-ER-Ry2" firstAttribute="top" secondItem="HMm-k9-Sy9" secondAttribute="bottom" id="H4L-m7-HbR"/>
+                            <constraint firstItem="FLn-ER-Ry2" firstAttribute="top" secondItem="HMm-k9-Sy9" secondAttribute="bottom" constant="-34" id="H4L-m7-HbR"/>
                             <constraint firstItem="HMm-k9-Sy9" firstAttribute="leading" secondItem="KX7-PG-alz" secondAttribute="leading" id="V5I-Lq-gcF"/>
                             <constraint firstItem="HMm-k9-Sy9" firstAttribute="top" secondItem="sLn-RH-tJ0" secondAttribute="bottom" id="dzg-gE-oTv"/>
                             <constraint firstAttribute="trailing" secondItem="HMm-k9-Sy9" secondAttribute="trailing" id="heE-4I-0Ka"/>
@@ -167,7 +167,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zd2-Jh-1UD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1386" y="110"/>
+            <point key="canvasLocation" x="1385.5072463768117" y="109.82142857142857"/>
         </scene>
         <!--Text Extractor View Controller-->
         <scene sceneID="cit-LS-yJn">
@@ -206,7 +206,7 @@
                                     <constraint firstAttribute="height" constant="27" id="AcP-Pe-D6S"/>
                                     <constraint firstAttribute="width" constant="140" id="Cu7-c0-58G"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Georgia" family="Georgia" pointSize="13"/>
+                                <fontDescription key="fontDescription" name="Georgia" family="Georgia" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -216,12 +216,11 @@
                                     <constraint firstAttribute="height" constant="27" id="6vd-uB-2aj"/>
                                     <constraint firstAttribute="width" constant="238" id="CyT-kX-RiN"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Georgia" family="Georgia" pointSize="13"/>
+                                <fontDescription key="fontDescription" name="Georgia" family="Georgia" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="eJ4-h8-eXf" secondAttribute="trailing" id="3mI-0c-Rpn"/>
                             <constraint firstItem="rG3-O2-Cx6" firstAttribute="top" secondItem="Ifc-8q-xz6" secondAttribute="bottom" constant="55" id="BmD-HF-w4d"/>
