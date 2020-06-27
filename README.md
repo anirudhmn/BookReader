@@ -6,4 +6,4 @@ Easily read .epub files on your laptop while controlling when to flip the pages 
 
 To add more books, simply click the plus sign on the mac and select your epub file. Not all epub files work (mac catalyst doesn't work perfectly) so if it doesn't work ignore it and try another book. 
 
-If you want to read a PDF, simply convert the pdf to a epub file using a website like [this] (https://www.zamzar.com/convert/pdf-to-epub/).
+If you want to read a PDF, simply convert the pdf to a epub file using a website like [this](https://www.zamzar.com/convert/pdf-to-epub/)

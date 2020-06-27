@@ -23,6 +23,7 @@ class TextExtractorViewController: UIViewController {
     var page = 0
     var book: [[String]] = [[String]]()
     let spacing: CGFloat = 13
+    let fontSize: CGFloat = 25
     
     var totalPages = 0
     var currentPage = 0
@@ -35,6 +36,7 @@ class TextExtractorViewController: UIViewController {
         super.viewDidAppear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = true
+        self.view.backgroundColor = UIColor.systemBackground
     }
     
     override func viewDidLoad() {
@@ -44,7 +46,7 @@ class TextExtractorViewController: UIViewController {
         style.lineSpacing = spacing
         style.alignment = .justified
         
-        let font = UIFont(name: "Georgia", size: 22)
+        let font = UIFont(name: "Georgia", size: fontSize)
         
         let attributes = [NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: font]
         
@@ -157,6 +159,28 @@ class TextExtractorViewController: UIViewController {
     }
     
     func getPagedBook(sections: [String]) -> ([[String]], Int) {
+        
+        let fileManager = FileManager.default
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        do {
+            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+            for i in fileURLs {
+                let a = epubName.replacingOccurrences(of: " ", with: "%20")
+                if i.absoluteString.contains("\(a)DESC.txt") {
+                    do {
+                        print("Found existing file.")
+                        let description = try String(contentsOf: i, encoding: .utf8)
+                        return arrayFromDesc(desc: description)
+                    }
+                    catch {
+                        print(error)
+                    }
+                }
+            }
+        } catch {
+           print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
+       }
+        
         var book:[[String]] = []
         var pages = 0
         
@@ -165,16 +189,20 @@ class TextExtractorViewController: UIViewController {
             let sectionText = sections[i]
             
             book.append([String]())
-            var sectionLines = sectionText.lines
-            let maxHeight = screenSize.height - (27+55) - spacing*spacing*1.7
+            var sectionWords = sectionText.words
+            let maxHeight = screenSize.height - (27+55) - spacing*spacing*2
             var excerpt = ""
             
-            while sectionLines != [] {
-                (excerpt, sectionLines) = extractHeight(withConstrainedWidth: screenSize.width/2 - (15+20+30), font: leftPage.font!, maxHeight: maxHeight, linesArray: sectionLines)
+            while sectionWords != [] {
+                (excerpt, sectionWords) = extractHeight(withConstrainedWidth: screenSize.width/2 - (15+20+30), font: leftPage.font!, maxHeight: maxHeight, wordsArray: sectionWords)
                 book[i].append(excerpt)
                 pages += 1
             }
         }
+        
+        let data:NSData = book.description.data(using: .utf8)! as NSData
+        let destinationPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+        data.write(toFile: "\(destinationPath ?? "")/\(epubName)DESC.txt", atomically: true)
         
         return (book, pages)
     }
@@ -194,24 +222,52 @@ class TextExtractorViewController: UIViewController {
         return sections
     }
     
-    func extractHeight(withConstrainedWidth width: CGFloat, font: UIFont, maxHeight: CGFloat, linesArray: [String]) -> (String, [String]) {
-        var lines = linesArray
+    func extractHeight(withConstrainedWidth width: CGFloat, font: UIFont, maxHeight: CGFloat, wordsArray: [String]) -> (String, [String]) {
+        var words = wordsArray
         var excerpt = ""
+        
         while (excerpt.height(withConstrainedWidth: width, font: font) < maxHeight) {
-            excerpt.append(contentsOf: lines[0])
-            excerpt.append(contentsOf: "\n")
-            lines.remove(at: 0)
-            if lines.count-1 >= 1 {
-                if excerpt.height(withConstrainedWidth: width, font: font) + lines[1].height(withConstrainedWidth: width, font: font) > maxHeight {
+            excerpt.append(contentsOf: words[0])
+            words.remove(at: 0)
+            if words.count-1 >= 1 {
+                if excerpt.height(withConstrainedWidth: width, font: font) + words[1].height(withConstrainedWidth: width, font: font) > maxHeight {
                     break
                 }
             }
-            if lines.count-1<=0 {
+            if words.count-1<=0 {
                 break
             }
         }
         
-        return (excerpt, lines)
+        return (excerpt, words)
+    }
+    
+    func arrayFromDesc(desc: String) -> ([[String]], Int) {
+        var book:[[String]] = []
+        var z = desc.components(separatedBy: "], [")
+        z[0] = String(z[0].dropFirst())
+        z[z.count-1] = String(z[z.count-1].dropLast())
+        var count = 0
+        for i in z {
+            let (a,b) = stringToArray(str: i)
+            book.append(a)
+            count += b
+        }
+        
+        return (book, count)
+    }
+    
+    func stringToArray(str: String) -> ([String], Int) {
+        var pages = str.components(separatedBy: "\", \"")
+        pages[0] = String(pages[0].dropFirst())
+        pages[pages.count-1] = String(pages[pages.count-1].dropLast())
+        for i in 0...pages.count-1 {
+            pages[i] = pages[i].replacingOccurrences(of: "\\n", with: "\n")
+            pages[i] = pages[i].replacingOccurrences(of: "\\\"", with: "\"")
+            pages[i] = pages[i].replacingOccurrences(of: "\\'", with: "\'")
+        }
+        
+        return (pages, pages.count)
     }
 }
 
@@ -225,6 +281,18 @@ extension String {
     
     var lines: [String] {
         return self.components(separatedBy: "\n")
+    }
+    
+    var words: [String] {
+        var array = [String]()
+        for i in lines {
+            let a = i.split(separator: " ")
+            for j in a {
+                array.append(String(j) + " ")
+            }
+            array.append("\n")
+        }
+        return array
     }
 }
 

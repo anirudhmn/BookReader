@@ -195,6 +195,7 @@
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lw8-cQ-tTT">
                                 <rect key="frame" x="370" y="270" width="60" height="60"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="g9w-yU-vqg"/>
                                     <constraint firstAttribute="height" constant="60" id="n4l-2B-4Gh"/>

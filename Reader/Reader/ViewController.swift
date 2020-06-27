@@ -113,7 +113,6 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.epubs.count
     }
@@ -136,10 +135,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(bookTitle)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 for child in snapshot.children {
-                    print("hello")
                     let snap = child as! DataSnapshot
                     if snap.key == "time" {
-                        print("ok")
                         let s = Int("\(snap.value ?? "0")")
                         cell?.detailTextLabel?.text = self.getTextFromSeconds(seconds: s ?? 0)
                     }
@@ -196,12 +193,35 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             self.navigationController?.show(remoteVC, sender: self)
         }
     }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if book {
+            if editingStyle == UITableViewCell.EditingStyle.delete {
+                let fileManager = FileManager.default
+                let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                let title = self.epubs[indexPath.section].1[indexPath.row]
+                let a = title.replacingOccurrences(of: " ", with: "%20")
+                let b = documentsURL.absoluteString + a + ".epub"
+                let c = documentsURL.absoluteString + a + "DESC.txt"
+                let d = documentsURL.absoluteString + a + "/"
+                deleteItem(url: URL(string: b)!)
+                deleteItem(url: URL(string: c)!)
+                deleteItem(url: URL(string: d)!)
+                
+                let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(title)
+                ref.removeValue()
+                
+                tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+                
+                updateBooks()
+            }
+        }
+    }
 }
 
 extension ViewController: UIDocumentPickerDelegate {
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        
         guard let selectedFileURL = urls.first else {
             return
         }
@@ -222,6 +242,17 @@ extension ViewController: UIDocumentPickerDelegate {
             catch {
                 print("Error: \(error)")
             }
+        }
+    }
+    
+    func deleteItem(url: URL) {
+        do {
+            try FileManager.default.removeItem(at: url)
+            print("Deleted file")
+            updateBooks()
+        }
+        catch {
+            print("Error: \(error)")
         }
     }
 }
