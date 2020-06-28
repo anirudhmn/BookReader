@@ -130,7 +130,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         let bookTitle = self.epubs[indexPath.section].1[indexPath.item]
         cell?.textLabel?.text = bookTitle
-        
+        cell?.detailTextLabel?.text = self.getTextFromSeconds(seconds: 0)
         if bookTitle != "" {
             let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(bookTitle)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in

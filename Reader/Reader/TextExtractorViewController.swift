@@ -64,7 +64,7 @@ class TextExtractorViewController: UIViewController {
         rightPage.numberOfLines = 0
         
         var sections = extractText()
-        if sections.count > 1 {
+        if sections.count > 2 {
             sections.remove(at: 0)
         }
         (book, totalPages) = getPagedBook(sections: sections)
@@ -159,7 +159,6 @@ class TextExtractorViewController: UIViewController {
     }
     
     func getPagedBook(sections: [String]) -> ([[String]], Int) {
-        
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         do {
@@ -184,35 +183,35 @@ class TextExtractorViewController: UIViewController {
         var book:[[String]] = []
         var pages = 0
         
-        for i in 0...sections.count-1 {
-            let screenSize = self.view.frame.size
-            let sectionText = sections[i]
-            
-            book.append([String]())
-            var sectionWords = sectionText.words
-            let maxHeight = screenSize.height - (27+55) - spacing*spacing*2
-            var excerpt = ""
-            
-            while sectionWords != [] {
-                (excerpt, sectionWords) = extractHeight(withConstrainedWidth: screenSize.width/2 - (15+20+30), font: leftPage.font!, maxHeight: maxHeight, wordsArray: sectionWords)
-                book[i].append(excerpt)
-                pages += 1
+        if sections.count > 0 {
+            for i in 0...sections.count-1 {
+                let screenSize = self.view.frame.size
+                let sectionText = sections[i]
+                
+                book.append([String]())
+                var sectionWords = sectionText.words
+                let maxHeight = screenSize.height - (27+55) - spacing*spacing*2
+                var excerpt = ""
+                
+                while sectionWords != [] {
+                    (excerpt, sectionWords) = extractHeight(withConstrainedWidth: screenSize.width/2 - (15+20+30), font: leftPage.font!, maxHeight: maxHeight, wordsArray: sectionWords)
+                    book[i].append(excerpt)
+                    pages += 1
+                }
             }
+            
+            let data:NSData = book.description.data(using: .utf8)! as NSData
+            let destinationPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+            data.write(toFile: "\(destinationPath ?? "")/\(epubName)DESC.txt", atomically: true)
+             
         }
-        
-        let data:NSData = book.description.data(using: .utf8)! as NSData
-        let destinationPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-        data.write(toFile: "\(destinationPath ?? "")/\(epubName)DESC.txt", atomically: true)
-        
         return (book, pages)
     }
     
     func extractText() -> [String] {
         var sections = [String]()
         
-        var i = 0
         for spine in epub.spines {
-            i += 1
             do {
                 sections.append(try epub.content(forSpine: spine))
             } catch {
