@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7714608524A497F900D06549 /* RemoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7714608424A497F900D06549 /* RemoteViewController.swift */; };
-		7714608724A49A8F00D06549 /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7714608624A49A8F00D06549 /* InitialViewController.swift */; };
 		773283E324A55E7B0010B728 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 773283E224A55E7B0010B728 /* GoogleService-Info.plist */; };
 		77DC3E2024A41E410084A9B5 /* TextExtractorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC3E1A24A41E410084A9B5 /* TextExtractorViewController.swift */; };
 		77DC3E2124A41E410084A9B5 /* EpubDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC3E1B24A41E410084A9B5 /* EpubDetailViewController.swift */; };
@@ -39,7 +38,6 @@
 		5E7FC3D34A6C5EEB7D2D9623 /* Pods_Reader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Reader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E8568B930936B305A1FDD0E /* Pods-ReaderTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReaderTests.release.xcconfig"; path = "Target Support Files/Pods-ReaderTests/Pods-ReaderTests.release.xcconfig"; sourceTree = "<group>"; };
 		7714608424A497F900D06549 /* RemoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteViewController.swift; sourceTree = "<group>"; };
-		7714608624A49A8F00D06549 /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		773283E224A55E7B0010B728 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		77DC3E1A24A41E410084A9B5 /* TextExtractorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextExtractorViewController.swift; sourceTree = "<group>"; };
 		77DC3E1B24A41E410084A9B5 /* EpubDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EpubDetailViewController.swift; sourceTree = "<group>"; };
@@ -109,7 +107,6 @@
 				77DC3E2724A41E7F0084A9B5 /* Reader.entitlements */,
 				77EC67F424A41D1200C89E55 /* AppDelegate.swift */,
 				77EC67F624A41D1200C89E55 /* SceneDelegate.swift */,
-				7714608624A49A8F00D06549 /* InitialViewController.swift */,
 				77DC3E1C24A41E410084A9B5 /* ImageCell.swift */,
 				77DC3E1E24A41E410084A9B5 /* CellUtitlities.swift */,
 				77EC67F824A41D1200C89E55 /* ViewController.swift */,
@@ -344,7 +341,6 @@
 				7714608524A497F900D06549 /* RemoteViewController.swift in Sources */,
 				77DC3E2024A41E410084A9B5 /* TextExtractorViewController.swift in Sources */,
 				77DC3E2124A41E410084A9B5 /* EpubDetailViewController.swift in Sources */,
-				7714608724A49A8F00D06549 /* InitialViewController.swift in Sources */,
 				77DC3E2424A41E410084A9B5 /* CellUtitlities.swift in Sources */,
 				77EC67F924A41D1200C89E55 /* ViewController.swift in Sources */,
 				77EC67F524A41D1200C89E55 /* AppDelegate.swift in Sources */,

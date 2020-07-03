@@ -38,6 +38,15 @@ class EpubDetailViewController: UIViewController {
     
     fileprivate var epubPlainChapters: [(chapter: ChapterItem, indentationLevel: Int)] = []
     
+    static var needsFullScreen = true
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if Self.needsFullScreen {
+            (NSClassFromString("NSApplication")?.value(forKeyPath: "sharedApplication.windows") as? [AnyObject])?.first?.perform(Selector("toggleFullScreen:"))
+            Self.needsFullScreen = false
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

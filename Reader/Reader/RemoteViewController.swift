@@ -12,9 +12,11 @@ import Firebase
 
 class RemoteViewController: UIViewController {
     
+    @IBOutlet var currentPageField: UITextField!
+    
     var epubName = String()
-    var doubleL = false
-    var doubleR = false
+    var ref = DatabaseReference()
+    var currentPage = 0
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -32,23 +34,33 @@ class RemoteViewController: UIViewController {
         
         view.addGestureRecognizer(rightSwipe)
         view.addGestureRecognizer(leftSwipe)
+        ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epubName)
+        
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            for child in snapshot.children {
+                let snap = child as! DataSnapshot
+                let key = snap.key
+                if key == "current" {
+                    self.currentPage = Int("\(snap.value ?? 0)")!
+                    self.currentPageField.text = "\(self.currentPage)"
+                }
+            }
+        })
+        self.addDoneButtonOnKeyboard()
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+            
+    @objc func dismissKeyboard() {
+        currentPageField.text = "\(currentPage)"
+        view.endEditing(true)
     }
     
     @objc func handleSwipe(sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
             switch sender.direction {
             case .right:
-                let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epubName)
-                
-                var swipe = "left"
-                if doubleL {
-                    swipe = "left_"
-                    doubleL = false
-                } else {
-                    doubleL = true
-                }
-                
-                let v = ["flip":swipe]
+                let v = ["update":"previous"]
                 ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
                     if err != nil {
                         print(err)
@@ -56,17 +68,7 @@ class RemoteViewController: UIViewController {
                     }
                 })
             case .left:
-                let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epubName)
-                
-                var swipe = "right"
-                if doubleR {
-                    swipe = "right_"
-                    doubleR = false
-                } else {
-                    doubleR = true
-                }
-                
-                let v = ["flip":swipe]
+                let v = ["update":"next"]
                 ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
                     if err != nil {
                         print(err)
@@ -76,6 +78,63 @@ class RemoteViewController: UIViewController {
             default:
                 break
             }
+            
+            let v = ["update":"none"]
+            ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
+                if err != nil {
+                    print(err)
+                    return
+                }
+                ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                    for child in snapshot.children {
+                        let snap = child as! DataSnapshot
+                        let key = snap.key
+                        if key == "current" {
+                            self.currentPage = Int("\(snap.value ?? 0)")!
+                            self.currentPageField.text = "\(self.currentPage)"
+                        }
+                    }
+                })
+            })
         }
+    }
+    
+    func addDoneButtonOnKeyboard() {
+        let doneToolbar: UIToolbar = UIToolbar(frame: CGRect.init(x: 0, y: 0, width: 320, height: 50))
+        doneToolbar.barStyle = UIBarStyle.default
+
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        let done: UIBarButtonItem = UIBarButtonItem(title: "Done", style: UIBarButtonItem.Style.done, target: self, action: #selector(doneButtonAction))
+
+        var items = [UIBarButtonItem]()
+        items.append(flexSpace)
+        items.append(done)
+
+        doneToolbar.items = items
+        doneToolbar.sizeToFit()
+
+        self.currentPageField.inputAccessoryView = doneToolbar
+    }
+    
+    @objc func doneButtonAction() {
+        if currentPageField.text != "" {
+            currentPage = Int(currentPageField.text!) ?? 0
+            let v = ["current":"\(currentPage)", "update":"page"]
+            ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
+                if err != nil {
+                    print(err)
+                    return
+                }
+            })
+            view.endEditing(true)
+        }
+        
+        let v = ["update":"none"]
+        ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
+            if err != nil {
+                print(err)
+                return
+            }
+        })
     }
 }

@@ -17,9 +17,16 @@ class ViewController: UIViewController {
     
     var epubs = [("Books",[""])]
     var refreshControl = UIRefreshControl()
+    var book = false
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+        
+        #if targetEnvironment(macCatalyst)
+            self.book = true
+        #else
+            self.book = false
+        #endif
         
         tableView.reloadData()
     }
@@ -176,7 +183,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 
                 if first {
-                    let v = ["page":"0", "section":"0", "current":"0", "flip":"none", "time":"0"]
+                    let v = ["page":"0", "section":"0", "current":"0", "update":"none", "time":"0"]
                     ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
                         if err != nil {
                             print(err)

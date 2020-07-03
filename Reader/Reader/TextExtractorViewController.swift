@@ -89,22 +89,28 @@ class TextExtractorViewController: UIViewController {
         })
         
         ref.observe(.childChanged) { (snapshot) in
-            if snapshot.key == "flip"{
+            if snapshot.key == "update" {
                 let val = "\(snapshot.value ?? "none")"
-                let flip = val.split(separator: "_")[0]
-                if flip == "right" {
+                if val == "next" {
                     self.nextPage()
-                } else if flip == "left" {
+                } else if val == "previous" {
                     self.previousPage()
+                } else if val == "page" {
+                    self.updateCurrentPage()
                 }
             }
         }
     }
 
     func nextPage() {
-        page += 2
-        currentPage += 2
-        if page >= book[section].count {
+        if page==pagesSection-1 {
+            page += 1
+            currentPage += 1
+        } else {
+            page += 2
+            currentPage += 2
+        }
+        if page >= pagesSection {
             section += 1
             page = 0
             if section >= book.count {
@@ -155,6 +161,42 @@ class TextExtractorViewController: UIViewController {
                 print(err)
                 return
             }
+        })
+    }
+    
+    func updateCurrentPage() {
+        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epubName)
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            for child in snapshot.children {
+                let snap = child as! DataSnapshot
+                let key = snap.key
+                if key == "current" {
+                    self.currentPage = Int("\(snap.value ?? 0)")!
+                }
+            }
+            var pageCounter = self.currentPage
+            self.page = 0
+            self.section = 0
+            for s in self.book {
+                if pageCounter > s.count {
+                    if s == self.book.last {
+                        self.page = s.count-1
+                        self.currentPage = self.totalPages
+                        self.pagesSection = s.count
+                    } else {
+                        pageCounter -= s.count
+                        self.section += 1
+                    }
+                } else {
+                    self.page = pageCounter-1
+                    self.pagesSection = self.book[self.section].count
+                    if self.page <= 0 {
+                        self.page = 0
+                    }
+                    break
+                }
+            }
+            self.updateText()
         })
     }
     
