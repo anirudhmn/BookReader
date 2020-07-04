@@ -46,6 +46,14 @@ class RemoteViewController: UIViewController {
                 }
             }
         })
+        
+        ref.observe(.childChanged) { (snapshot) in
+            if snapshot.key == "current" {
+                self.currentPage = Int("\(snapshot.value ?? 0)")!
+                self.currentPageField.text = "\(self.currentPage)"
+            }
+        }
+        
         self.addDoneButtonOnKeyboard()
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
@@ -85,16 +93,6 @@ class RemoteViewController: UIViewController {
                     print(err)
                     return
                 }
-                ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                    for child in snapshot.children {
-                        let snap = child as! DataSnapshot
-                        let key = snap.key
-                        if key == "current" {
-                            self.currentPage = Int("\(snap.value ?? 0)")!
-                            self.currentPageField.text = "\(self.currentPage)"
-                        }
-                    }
-                })
             })
         }
     }

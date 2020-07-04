@@ -36,7 +36,6 @@ class TextExtractorViewController: UIViewController {
         super.viewDidAppear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = true
-        self.view.backgroundColor = UIColor.systemBackground
     }
     
     override func viewDidLoad() {
@@ -85,7 +84,7 @@ class TextExtractorViewController: UIViewController {
                 }
             }
             self.pagesSection = self.book[self.section].count
-            self.updateText()
+            self.updateText(animated: "none")
         })
         
         ref.observe(.childChanged) { (snapshot) in
@@ -121,7 +120,7 @@ class TextExtractorViewController: UIViewController {
             pagesSection = book[section].count
         }
         
-        updateText()
+        updateText(animated: "next")
     }
     
     func previousPage() {
@@ -139,15 +138,69 @@ class TextExtractorViewController: UIViewController {
             pagesSection = book[section].count
         }
         
-        updateText()
+        updateText(animated: "previous")
     }
     
-    func updateText() {
-        leftPage.text = book[section][page]
-        if book[section].count - 1 > page+1 {
-            rightPage.text = book[section][page+1]
+    func updateText(animated: String) {
+        if animated == "next" {
+            let flipPage = rightPage.clone()
+            view.addSubview(flipPage)
+            
+            rightPage.text = book[section][page]
+            if book[section].count - 1 > page+1 {
+                flipPage.text = book[section][page+1]
+            } else {
+                flipPage.text = ""
+            }
+            
+            let transitionOptions: UIView.AnimationOptions = [.transitionFlipFromRight, .allowAnimatedContent]
+            DispatchQueue.main.async {
+                UIView.transition(with: self.rightPage, duration: 0.5, options: transitionOptions, animations: {
+                    UIView.animate(withDuration: 0.5) {
+                        self.rightPage.center = self.leftPage.center
+                        self.leftPage.alpha = 0
+                    }
+                }) { (completed) in
+                    self.leftPage.text = self.rightPage.text
+                    self.rightPage.text = flipPage.text
+                    self.rightPage.center = flipPage.center
+                    flipPage.removeFromSuperview()
+                    self.leftPage.alpha = 1
+                }
+            }
+        } else if animated == "previous" {
+            let flipPage = leftPage.clone()
+            view.addSubview(flipPage)
+            
+            flipPage.text = book[section][page]
+            if book[section].count - 1 > page+1 {
+                leftPage.text = book[section][page+1]
+            } else {
+                leftPage.text = ""
+            }
+            
+            let transitionOptions: UIView.AnimationOptions = [.transitionFlipFromRight, .allowAnimatedContent]
+            DispatchQueue.main.async {
+                UIView.transition(with: self.leftPage, duration: 0.5, options: transitionOptions, animations: {
+                    UIView.animate(withDuration: 0.5) {
+                        self.leftPage.center = self.rightPage.center
+                        self.rightPage.alpha = 0
+                    }
+                }) { (completed) in
+                    self.rightPage.text = self.leftPage.text
+                    self.leftPage.text = flipPage.text
+                    self.leftPage.center = flipPage.center
+                    flipPage.removeFromSuperview()
+                    self.rightPage.alpha = 1
+                }
+            }
         } else {
-            rightPage.text = ""
+            leftPage.text = book[section][page]
+            if book[section].count - 1 > page+1 {
+                rightPage.text = book[section][page+1]
+            } else {
+                rightPage.text = ""
+            }
         }
         
         pagesTotalLabel.text = "Page \(currentPage)/\(totalPages)"
@@ -167,11 +220,18 @@ class TextExtractorViewController: UIViewController {
     func updateCurrentPage() {
         let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epubName)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            var animate = "previous"
             for child in snapshot.children {
                 let snap = child as! DataSnapshot
                 let key = snap.key
                 if key == "current" {
-                    self.currentPage = Int("\(snap.value ?? 0)")!
+                    let n = Int("\(snap.value ?? 0)")!
+                    if n < self.currentPage {
+                        animate = "previous"
+                    } else if n > self.currentPage {
+                        animate = "next"
+                    }
+                    self.currentPage = n
                 }
             }
             var pageCounter = self.currentPage
@@ -196,7 +256,7 @@ class TextExtractorViewController: UIViewController {
                     break
                 }
             }
-            self.updateText()
+            self.updateText(animated: animate)
         })
     }
     
@@ -340,5 +400,30 @@ extension String {
 extension Date {
     func seconds(from date: Date) -> Int {
         return Calendar.current.dateComponents([.second], from: date, to: self).second ?? 0
+    }
+}
+
+extension UILabel{
+    func clone() -> UILabel {
+        let label = UILabel(frame: frame)
+        label.text = text
+        label.font = font
+        label.textColor = textColor
+        label.shadowColor = shadowColor
+        label.shadowOffset = shadowOffset
+        label.textAlignment = textAlignment
+        label.lineBreakMode = lineBreakMode
+        label.attributedText = attributedText
+        label.highlightedTextColor = highlightedTextColor
+        label.isHighlighted = isHighlighted
+        label.isUserInteractionEnabled = isUserInteractionEnabled
+        label.isEnabled = isEnabled
+        label.numberOfLines = numberOfLines
+        label.adjustsFontSizeToFitWidth = adjustsFontSizeToFitWidth
+        label.baselineAdjustment = baselineAdjustment
+        label.minimumScaleFactor = minimumScaleFactor
+        label.allowsDefaultTighteningForTruncation = allowsDefaultTighteningForTruncation
+        label.preferredMaxLayoutWidth = preferredMaxLayoutWidth
+return label
     }
 }
