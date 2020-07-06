@@ -26,9 +26,76 @@
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="ceP-vd-zZ1"/>
                                 </connections>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ukY-eQ-Oey">
+                                <rect key="frame" x="280" y="172" width="241" height="257"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New device established!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FwU-24-edB">
+                                        <rect key="frame" x="8" y="8" width="225" height="43"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="43" id="csR-oM-f5E"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Georgia" family="Georgia" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please enter this code on your phone screen: ADJIJOJKJ-FNKKWFE-FNLEWFE-NKJEW43523FNEWK" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="I3C-cf-Y0H">
+                                        <rect key="frame" x="8" y="59" width="225" height="73"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="73" id="Zgz-dH-eBB"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Georgia" family="Georgia" pointSize="16"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Code" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SQD-HI-OEe">
+                                        <rect key="frame" x="8" y="140" width="225" height="34"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="34" id="uaY-Pt-baU"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="elT-AU-2hx">
+                                        <rect key="frame" x="8" y="187" width="225" height="50"/>
+                                        <color key="backgroundColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="Yj4-Ii-JSG"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Georgia" family="Georgia" pointSize="25"/>
+                                        <state key="normal" title="OK">
+                                            <color key="titleColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="okPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="oIa-fy-grD"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstItem="I3C-cf-Y0H" firstAttribute="leading" secondItem="ukY-eQ-Oey" secondAttribute="leading" constant="8" id="4Bj-3H-HuK"/>
+                                    <constraint firstItem="FwU-24-edB" firstAttribute="leading" secondItem="ukY-eQ-Oey" secondAttribute="leading" constant="8" id="7Ob-hG-Uop"/>
+                                    <constraint firstAttribute="trailing" secondItem="FwU-24-edB" secondAttribute="trailing" constant="8" id="8Mz-mB-wUA"/>
+                                    <constraint firstItem="elT-AU-2hx" firstAttribute="top" secondItem="SQD-HI-OEe" secondAttribute="bottom" constant="13" id="9Qg-H8-F2d"/>
+                                    <constraint firstItem="I3C-cf-Y0H" firstAttribute="top" secondItem="FwU-24-edB" secondAttribute="bottom" constant="8" id="A2N-bL-56r"/>
+                                    <constraint firstAttribute="width" constant="241" id="DLL-XK-egr"/>
+                                    <constraint firstItem="elT-AU-2hx" firstAttribute="leading" secondItem="ukY-eQ-Oey" secondAttribute="leading" constant="8" id="ET3-du-QTe"/>
+                                    <constraint firstAttribute="trailing" secondItem="I3C-cf-Y0H" secondAttribute="trailing" constant="8" id="JR0-t0-mEI"/>
+                                    <constraint firstAttribute="trailing" secondItem="SQD-HI-OEe" secondAttribute="trailing" constant="8" id="UTF-Ak-oJF"/>
+                                    <constraint firstItem="SQD-HI-OEe" firstAttribute="top" secondItem="I3C-cf-Y0H" secondAttribute="bottom" constant="8" id="ZbL-Eg-XfU"/>
+                                    <constraint firstAttribute="trailing" secondItem="elT-AU-2hx" secondAttribute="trailing" constant="8" id="bBm-Gk-F09"/>
+                                    <constraint firstAttribute="height" constant="257" id="bOJ-aZ-ZnR"/>
+                                    <constraint firstItem="SQD-HI-OEe" firstAttribute="top" secondItem="I3C-cf-Y0H" secondAttribute="bottom" constant="8" id="fQk-Or-oiA"/>
+                                    <constraint firstItem="elT-AU-2hx" firstAttribute="top" secondItem="SQD-HI-OEe" secondAttribute="bottom" constant="13" id="knM-69-5t5"/>
+                                    <constraint firstItem="I3C-cf-Y0H" firstAttribute="top" secondItem="FwU-24-edB" secondAttribute="bottom" constant="8" id="q2T-T8-OVn"/>
+                                    <constraint firstItem="SQD-HI-OEe" firstAttribute="leading" secondItem="ukY-eQ-Oey" secondAttribute="leading" constant="8" id="tKI-3O-TU6"/>
+                                    <constraint firstItem="FwU-24-edB" firstAttribute="top" secondItem="ukY-eQ-Oey" secondAttribute="top" constant="8" id="vkl-AF-8v1"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="ukY-eQ-Oey" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="8vB-FJ-kug"/>
+                            <constraint firstItem="ukY-eQ-Oey" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="Vd7-Xj-eUE"/>
                             <constraint firstItem="yhC-J5-IOe" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="bUS-pm-xYQ"/>
                             <constraint firstAttribute="trailing" secondItem="yhC-J5-IOe" secondAttribute="trailing" id="qWn-bK-nJ2"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="yhC-J5-IOe" secondAttribute="bottom" constant="-34" id="sle-zG-q1E"/>
@@ -37,12 +104,17 @@
                     </view>
                     <navigationItem key="navigationItem" id="2Uh-zm-w4L"/>
                     <connections>
+                        <outlet property="backButton" destination="elT-AU-2hx" id="Ki6-9x-kRA"/>
+                        <outlet property="contentView" destination="ukY-eQ-Oey" id="v5N-Qs-ubh"/>
+                        <outlet property="descriptionLabel" destination="I3C-cf-Y0H" id="iiQ-Ne-ihz"/>
+                        <outlet property="inputTextField" destination="SQD-HI-OEe" id="Fhv-Eo-das"/>
                         <outlet property="tableView" destination="yhC-J5-IOe" id="0ss-SA-gcz"/>
+                        <outlet property="titleLabel" destination="FwU-24-edB" id="7iU-mD-RRX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="636.23188405797111" y="107.8125"/>
+            <point key="canvasLocation" x="636.01756954612006" y="107.8125"/>
         </scene>
         <!--Remote View Controller-->
         <scene sceneID="4Vb-qU-xa6">
@@ -66,7 +138,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="345" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e8V-2B-1cM">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="0" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e8V-2B-1cM">
                                 <rect key="frame" x="197" y="20" width="85" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="85" id="NWj-HB-2tL"/>

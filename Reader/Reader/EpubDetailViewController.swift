@@ -14,19 +14,21 @@ class EpubDetailViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    var epubName: String? {
+    var bookName: String? {
         didSet {
-            self.epubExtractor.delegate = self
-            let destinationPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-            let destinationURL = URL(string: destinationPath!)?.appendingPathComponent(epubName!)
-            
-            let fileManager = FileManager.default
-            let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let a = epubName?.replacingOccurrences(of: " ", with: "%20")
-            let b = documentsURL.absoluteString + a! + ".epub"
-            let fileURL = URL(string: b)!
-                            
-            self.epubExtractor.extractEpub(epubURL: fileURL, destinationFolder: destinationURL!)
+            if epubFile {
+                self.epubExtractor.delegate = self
+                let destinationPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+                let destinationURL = URL(string: destinationPath!)?.appendingPathComponent(bookName!)
+                
+                let fileManager = FileManager.default
+                let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                let a = bookName?.replacingOccurrences(of: " ", with: "%20")
+                let b = documentsURL.absoluteString + a! + ".epub"
+                let fileURL = URL(string: b)!
+                                
+                self.epubExtractor.extractEpub(epubURL: fileURL, destinationFolder: destinationURL!)
+            }
         }
     }
     
@@ -57,14 +59,13 @@ class EpubDetailViewController: UIViewController {
     }
     
     @objc func extractTextPressed() {
-        guard let epub = epub else { print("no epub"); return }
-    
         let vc = storyboard?.instantiateViewController(withIdentifier: "TextExtractor") as! TextExtractorViewController
-        vc.epub = epub
-        vc.epubName = epubName!
+        if epubFile {
+            guard let epub = epub else { print("no epub"); return }
+            vc.epub = epub
+        }
+        vc.bookName = bookName!
         navigationController?.pushViewController(vc, animated: true)
-        
-        
     }
     
     private func generatePlainChapters(chapters: [ChapterItem], currentIndentationLevel: Int = 0) -> [(chapter: ChapterItem, indentationLevel: Int)] {

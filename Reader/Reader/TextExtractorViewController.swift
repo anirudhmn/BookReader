@@ -9,6 +9,7 @@
 import UIKit
 import EpubExtractor
 import Firebase
+import PDFKit
 
 class TextExtractorViewController: UIViewController {
     
@@ -18,12 +19,12 @@ class TextExtractorViewController: UIViewController {
     @IBOutlet var pagesSectionLabel: UILabel!
     
     var epub: Epub!
-    var epubName = ""
+    var bookName = ""
     var section = 0
     var page = 0
     var book: [[String]] = [[String]]()
     let spacing: CGFloat = 13
-    let fontSize: CGFloat = 25
+    var fontSize: CGFloat = 25
     
     var totalPages = 0
     var currentPage = 0
@@ -45,6 +46,9 @@ class TextExtractorViewController: UIViewController {
         style.lineSpacing = spacing
         style.alignment = .justified
         
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
+            fontSize = 20
+        }
         let font = UIFont(name: "Georgia", size: fontSize)
         
         let attributes = [NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: font]
@@ -68,7 +72,15 @@ class TextExtractorViewController: UIViewController {
         }
         (book, totalPages) = getPagedBook(sections: sections)
         
-        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epubName)
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(sender:)))
+        rightSwipe.direction = .right
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(sender:)))
+        leftSwipe.direction = .left
+        
+        view.addGestureRecognizer(rightSwipe)
+        view.addGestureRecognizer(leftSwipe)
+        
+        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(userID).child(bookName)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             for child in snapshot.children {
                 let snap = child as! DataSnapshot
@@ -97,6 +109,23 @@ class TextExtractorViewController: UIViewController {
                 } else if val == "page" {
                     self.updateCurrentPage()
                 }
+            }
+        }
+    }
+    
+    @objc func handleSwipe(sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            switch sender.direction {
+                case .right:
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                        self.previousPage()
+                    }
+                case .left:
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                        self.nextPage()
+                    }
+                default:
+                    break
             }
         }
     }
@@ -155,11 +184,12 @@ class TextExtractorViewController: UIViewController {
             
             let transitionOptions: UIView.AnimationOptions = [.transitionFlipFromRight, .allowAnimatedContent]
             DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.5) {
+                    self.rightPage.center = self.leftPage.center
+                    self.leftPage.alpha = 0
+                }
                 UIView.transition(with: self.rightPage, duration: 0.5, options: transitionOptions, animations: {
-                    UIView.animate(withDuration: 0.5) {
-                        self.rightPage.center = self.leftPage.center
-                        self.leftPage.alpha = 0
-                    }
+                    
                 }) { (completed) in
                     self.leftPage.text = self.rightPage.text
                     self.rightPage.text = flipPage.text
@@ -179,13 +209,14 @@ class TextExtractorViewController: UIViewController {
                 leftPage.text = ""
             }
             
-            let transitionOptions: UIView.AnimationOptions = [.transitionFlipFromRight, .allowAnimatedContent]
+            let transitionOptions: UIView.AnimationOptions = [.transitionFlipFromLeft, .allowAnimatedContent]
             DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.5) {
+                    self.leftPage.center = self.rightPage.center
+                    self.rightPage.alpha = 0
+                }
                 UIView.transition(with: self.leftPage, duration: 0.5, options: transitionOptions, animations: {
-                    UIView.animate(withDuration: 0.5) {
-                        self.leftPage.center = self.rightPage.center
-                        self.rightPage.alpha = 0
-                    }
+                    
                 }) { (completed) in
                     self.rightPage.text = self.leftPage.text
                     self.leftPage.text = flipPage.text
@@ -206,7 +237,7 @@ class TextExtractorViewController: UIViewController {
         pagesTotalLabel.text = "Page \(currentPage)/\(totalPages)"
         pagesSectionLabel.text = "\(pagesSection-page) pages left in this section"
         
-        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epubName)
+        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(userID).child(bookName)
         let time = Date.init().seconds(from: startTime) + pastTime
         let v = ["page":"\(page)", "section":"\(section)", "current":"\(currentPage)", "time":"\(time)"]
         ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
@@ -218,7 +249,7 @@ class TextExtractorViewController: UIViewController {
     }
     
     func updateCurrentPage() {
-        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epubName)
+        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(userID).child(bookName)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             var animate = "previous"
             for child in snapshot.children {
@@ -266,7 +297,7 @@ class TextExtractorViewController: UIViewController {
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
             for i in fileURLs {
-                let a = epubName.replacingOccurrences(of: " ", with: "%20")
+                let a = bookName.replacingOccurrences(of: " ", with: "%20")
                 if i.absoluteString.contains("\(a)DESC.txt") {
                     do {
                         print("Found existing file.")
@@ -304,7 +335,7 @@ class TextExtractorViewController: UIViewController {
             
             let data:NSData = book.description.data(using: .utf8)! as NSData
             let destinationPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-            data.write(toFile: "\(destinationPath ?? "")/\(epubName)DESC.txt", atomically: true)
+            data.write(toFile: "\(destinationPath ?? "")/\(bookName)DESC.txt", atomically: true)
              
         }
         return (book, pages)
@@ -313,12 +344,24 @@ class TextExtractorViewController: UIViewController {
     func extractText() -> [String] {
         var sections = [String]()
         
-        for spine in epub.spines {
-            do {
-                sections.append(try epub.content(forSpine: spine))
-            } catch {
-                print("there was an error: \(error)")
+        if epubFile {
+            for spine in epub.spines {
+                do {
+                    sections.append(try epub.content(forSpine: spine))
+                } catch {
+                    print("there was an error: \(error)")
+                }
             }
+        } else {
+            let destinationPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+            let destinationURL = URL(string: destinationPath!)?.appendingPathComponent(bookName)
+            
+            let fileManager = FileManager.default
+            let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let a = bookName.replacingOccurrences(of: " ", with: "%20")
+            let b = documentsURL.absoluteString + a + ".pdf"
+            let fileURL = URL(string: b)!
+            sections.append(PDFDocument(url: fileURL)?.string ?? "Error")
         }
         return sections
     }

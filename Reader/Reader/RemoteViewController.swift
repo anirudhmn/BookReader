@@ -14,7 +14,7 @@ class RemoteViewController: UIViewController {
     
     @IBOutlet var currentPageField: UITextField!
     
-    var epubName = String()
+    var bookName = String()
     var ref = DatabaseReference()
     var currentPage = 0
     
@@ -34,7 +34,8 @@ class RemoteViewController: UIViewController {
         
         view.addGestureRecognizer(rightSwipe)
         view.addGestureRecognizer(leftSwipe)
-        ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(epubName)
+        
+        ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(userID).child(bookName)
         
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             for child in snapshot.children {
@@ -67,24 +68,24 @@ class RemoteViewController: UIViewController {
     @objc func handleSwipe(sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
             switch sender.direction {
-            case .right:
-                let v = ["update":"previous"]
-                ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
-                    if err != nil {
-                        print(err)
-                        return
-                    }
-                })
-            case .left:
-                let v = ["update":"next"]
-                ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
-                    if err != nil {
-                        print(err)
-                        return
-                    }
-                })
-            default:
-                break
+                case .right:
+                    let v = ["update":"previous"]
+                    ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
+                        if err != nil {
+                            print(err)
+                            return
+                        }
+                    })
+                case .left:
+                    let v = ["update":"next"]
+                    ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
+                        if err != nil {
+                            print(err)
+                            return
+                        }
+                    })
+                default:
+                    break
             }
             
             let v = ["update":"none"]
