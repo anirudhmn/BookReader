@@ -13,6 +13,7 @@ class EpubDetailViewController: UIViewController {
     private let epubExtractor = EpubExtractor()
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet var loadingView: UIView!
     
     var bookName: String? {
         didSet {
@@ -26,7 +27,7 @@ class EpubDetailViewController: UIViewController {
                 let a = bookName?.replacingOccurrences(of: " ", with: "%20")
                 let b = documentsURL.absoluteString + a! + ".epub"
                 let fileURL = URL(string: b)!
-                                
+                
                 self.epubExtractor.extractEpub(epubURL: fileURL, destinationFolder: destinationURL!)
             }
         }
@@ -47,6 +48,7 @@ class EpubDetailViewController: UIViewController {
             (NSClassFromString("NSApplication")?.value(forKeyPath: "sharedApplication.windows") as? [AnyObject])?.first?.perform(Selector("toggleFullScreen:"))
             Self.needsFullScreen = false
         }
+        loadingView.isHidden = true
     }
     
     override func viewDidLoad() {
@@ -59,13 +61,17 @@ class EpubDetailViewController: UIViewController {
     }
     
     @objc func extractTextPressed() {
-        let vc = storyboard?.instantiateViewController(withIdentifier: "TextExtractor") as! TextExtractorViewController
-        if epubFile {
-            guard let epub = epub else { print("no epub"); return }
-            vc.epub = epub
+        loadingView.isHidden = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            let vc = self.storyboard?.instantiateViewController(withIdentifier: "TextExtractor") as! TextExtractorViewController
+            if epubFile {
+                guard let epub = self.epub else { print("no epub"); return }
+                vc.epub = epub
+            }
+            vc.bookName = self.bookName!
+            
+            self.navigationController?.pushViewController(vc, animated: true)
         }
-        vc.bookName = bookName!
-        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func generatePlainChapters(chapters: [ChapterItem], currentIndentationLevel: Int = 0) -> [(chapter: ChapterItem, indentationLevel: Int)] {

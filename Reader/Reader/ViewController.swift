@@ -12,6 +12,7 @@ import EpubExtractor
 import Firebase
 import AudioToolbox
 import MobileCoreServices
+import SSZipArchive
 
 var userID = ""
 var epubFile = true
@@ -396,6 +397,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 deleteItem(url: URL(string: b)!)
                 deleteItem(url: URL(string: c)!)
                 deleteItem(url: URL(string: d)!)
+                print(d)
                 
                 let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(userID).child(title)
                 ref.removeValue()

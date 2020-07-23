@@ -24,7 +24,7 @@ class TextExtractorViewController: UIViewController {
     var page = 0
     var book: [[String]] = [[String]]()
     let spacing: CGFloat = 13
-    var fontSize: CGFloat = 25
+    var fontSize: CGFloat = 20
     
     var totalPages = 0
     var currentPage = 0
@@ -46,9 +46,10 @@ class TextExtractorViewController: UIViewController {
         style.lineSpacing = spacing
         style.alignment = .justified
         
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
-            fontSize = 20
-        }
+        #if targetEnvironment(macCatalyst)
+            fontSize = 25
+        #endif
+        
         let font = UIFont(name: "Georgia", size: fontSize)
         
         let attributes = [NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: font]
@@ -115,13 +116,18 @@ class TextExtractorViewController: UIViewController {
     
     @objc func handleSwipe(sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
+            var delay = 0.01
+            #if targetEnvironment(macCatalyst)
+                delay = 0.005
+            #endif
+            
             switch sender.direction {
                 case .right:
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                         self.previousPage()
                     }
                 case .left:
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                         self.nextPage()
                     }
                 default:
@@ -467,6 +473,6 @@ extension UILabel{
         label.minimumScaleFactor = minimumScaleFactor
         label.allowsDefaultTighteningForTruncation = allowsDefaultTighteningForTruncation
         label.preferredMaxLayoutWidth = preferredMaxLayoutWidth
-return label
+        return label
     }
 }
