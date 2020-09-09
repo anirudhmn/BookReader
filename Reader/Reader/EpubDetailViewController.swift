@@ -49,6 +49,7 @@ class EpubDetailViewController: UIViewController {
             Self.needsFullScreen = false
         }
         loadingView.isHidden = true
+        
     }
     
     override func viewDidLoad() {

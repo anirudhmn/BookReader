@@ -25,6 +25,7 @@ class TextExtractorViewController: UIViewController {
     var book: [[String]] = [[String]]()
     let spacing: CGFloat = 13
     var fontSize: CGFloat = 20
+    let bigThreshold: CGFloat = 2200
     
     var totalPages = 0
     var currentPage = 0
@@ -47,7 +48,11 @@ class TextExtractorViewController: UIViewController {
         style.alignment = .justified
         
         #if targetEnvironment(macCatalyst)
-            fontSize = 25
+            if self.view.frame.size.width > bigThreshold {
+                fontSize = 28
+            } else {
+                fontSize = 25
+            }
         #endif
         
         let font = UIFont(name: "Georgia", size: fontSize)
@@ -110,6 +115,9 @@ class TextExtractorViewController: UIViewController {
                 } else if val == "page" {
                     self.updateCurrentPage()
                 }
+            } else if snapshot.key == "search" {
+                let val = "\(snapshot.value ?? "")"
+                self.searchText(phrase: val)
             }
         }
     }
@@ -176,6 +184,33 @@ class TextExtractorViewController: UIViewController {
         updateText(animated: "previous")
     }
     
+    func searchText(phrase: String) {
+        var searchResults = ""
+        let flat = book.flatMap{$0}
+        for i in 0...flat.count-1 {
+            if flat[i].lowercased().contains(phrase.lowercased()){
+                searchResults += "\(i+2), "
+            }
+        }
+        searchResults = String(searchResults.dropLast(2))
+        
+        let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(userID).child(bookName)
+        var v = ["searchResults":""]
+        ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
+            if err != nil {
+                print(err)
+                return
+            }
+        })
+        v = ["searchResults":searchResults]
+        ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
+            if err != nil {
+                print(err)
+                return
+            }
+        })
+    }
+    
     func updateText(animated: String) {
         if animated == "next" {
             let flipPage = rightPage.clone()
@@ -240,8 +275,8 @@ class TextExtractorViewController: UIViewController {
             }
         }
         
-        pagesTotalLabel.text = "Page \(currentPage)/\(totalPages)"
-        pagesSectionLabel.text = "\(pagesSection-page) pages left in this section"
+        pagesTotalLabel.text = "Page \(currentPage+1)/\(totalPages+1)"
+        pagesSectionLabel.text = "\(pagesSection-page+1) pages left in this section"
         
         let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(userID).child(bookName)
         let time = Date.init().seconds(from: startTime) + pastTime
@@ -298,20 +333,34 @@ class TextExtractorViewController: UIViewController {
     }
     
     func getPagedBook(sections: [String]) -> ([[String]], Int) {
+        let screenSize = self.view.frame.size
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
             for i in fileURLs {
                 let a = bookName.replacingOccurrences(of: " ", with: "%20")
-                if i.absoluteString.contains("\(a)DESC.txt") {
-                    do {
-                        print("Found existing file.")
-                        let description = try String(contentsOf: i, encoding: .utf8)
-                        return arrayFromDesc(desc: description)
+                if screenSize.width > bigThreshold {
+                    if i.absoluteString.contains("\(a)DESCBig.txt") {
+                        do {
+                            print("Found existing file.")
+                            let description = try String(contentsOf: i, encoding: .utf8)
+                            return arrayFromDesc(desc: description)
+                        }
+                        catch {
+                            print(error)
+                        }
                     }
-                    catch {
-                        print(error)
+                } else {
+                    if i.absoluteString.contains("\(a)DESC.txt") {
+                        do {
+                            print("Found existing file.")
+                            let description = try String(contentsOf: i, encoding: .utf8)
+                            return arrayFromDesc(desc: description)
+                        }
+                        catch {
+                            print(error)
+                        }
                     }
                 }
             }
@@ -324,7 +373,6 @@ class TextExtractorViewController: UIViewController {
         
         if sections.count > 0 {
             for i in 0...sections.count-1 {
-                let screenSize = self.view.frame.size
                 let sectionText = sections[i]
                 
                 book.append([String]())
@@ -341,8 +389,11 @@ class TextExtractorViewController: UIViewController {
             
             let data:NSData = book.description.data(using: .utf8)! as NSData
             let destinationPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-            data.write(toFile: "\(destinationPath ?? "")/\(bookName)DESC.txt", atomically: true)
-             
+            if screenSize.width > bigThreshold {
+                data.write(toFile: "\(destinationPath ?? "")/\(bookName)DESCBig.txt", atomically: true)
+            } else {
+                data.write(toFile: "\(destinationPath ?? "")/\(bookName)DESC.txt", atomically: true)
+            }
         }
         return (book, pages)
     }

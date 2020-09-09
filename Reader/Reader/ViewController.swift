@@ -361,7 +361,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 
                 if first {
-                    let v = ["page":"0", "section":"0", "current":"0", "update":"none", "time":"0"]
+                    let v = ["page":"0", "section":"0", "current":"0", "update":"none", "time":"0", "search": "none", "searchResults": "nonee"]
                     ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
                         if err != nil {
                             print(err)
@@ -392,11 +392,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 } else if indexPath.section == 1 {
                     b = documentsURL.absoluteString + a + ".pdf"
                 }
-                let c = documentsURL.absoluteString + a + "DESC.txt"
-                let d = documentsURL.absoluteString + a + "/"
+                let c = documentsURL.absoluteString + a + "/"
+                let d = documentsURL.absoluteString + a + "DESC.txt"
+                let e = documentsURL.absoluteString + a + "DESCBig.txt"
                 deleteItem(url: URL(string: b)!)
                 deleteItem(url: URL(string: c)!)
                 deleteItem(url: URL(string: d)!)
+                deleteItem(url: URL(string: e)!)
                 print(d)
                 
                 let ref = Database.database().reference(fromURL: "https://epubreader-6d14e.firebaseio.com").child(userID).child(title)

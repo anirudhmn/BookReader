@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="GON-FX-LIW">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="GON-FX-LIW">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -147,22 +147,48 @@
                                 <fontDescription key="fontDescription" name="Georgia" family="Georgia" pointSize="26"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                             </textField>
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="7yK-ek-Z8S">
+                                <rect key="frame" x="20" y="113" width="374" height="44"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="bAc-sX-AkK"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="15, 200, 1245" textAlignment="natural" adjustsFontForContentSizeCategory="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X7z-Bv-W3d">
+                                <rect key="frame" x="20" y="167" width="374" height="116"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="116" id="sUW-fa-2pp"/>
+                                </constraints>
+                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <fontDescription key="fontDescription" name="Georgia" family="Georgia" pointSize="22"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="e8V-2B-1cM" firstAttribute="leading" secondItem="2g2-Vg-qSs" secondAttribute="trailing" constant="8" id="8EX-Tf-EG9"/>
                             <constraint firstItem="e8V-2B-1cM" firstAttribute="top" secondItem="9R4-n1-6xy" secondAttribute="bottom" constant="20" id="9Rv-dF-iXa"/>
                             <constraint firstItem="2g2-Vg-qSs" firstAttribute="top" secondItem="9R4-n1-6xy" secondAttribute="bottom" constant="20" id="K1V-FE-u7l"/>
+                            <constraint firstItem="7yK-ek-Z8S" firstAttribute="trailing" secondItem="8HT-zF-VFt" secondAttribute="trailingMargin" id="RQF-m6-1r8"/>
                             <constraint firstItem="2g2-Vg-qSs" firstAttribute="leading" secondItem="8HT-zF-VFt" secondAttribute="leadingMargin" id="Vfk-Ja-NtD"/>
+                            <constraint firstItem="7yK-ek-Z8S" firstAttribute="top" secondItem="2g2-Vg-qSs" secondAttribute="bottom" constant="5" id="X6G-lE-Ce6"/>
+                            <constraint firstItem="X7z-Bv-W3d" firstAttribute="leading" secondItem="8HT-zF-VFt" secondAttribute="leadingMargin" id="XKm-eJ-b3M"/>
+                            <constraint firstItem="X7z-Bv-W3d" firstAttribute="trailing" secondItem="8HT-zF-VFt" secondAttribute="trailingMargin" id="gzj-H6-aAT"/>
+                            <constraint firstItem="7yK-ek-Z8S" firstAttribute="leading" secondItem="8HT-zF-VFt" secondAttribute="leadingMargin" id="iEb-8r-riA"/>
+                            <constraint firstItem="X7z-Bv-W3d" firstAttribute="top" secondItem="7yK-ek-Z8S" secondAttribute="bottom" constant="10" id="rEh-Ts-XS3"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="currentPageField" destination="e8V-2B-1cM" id="cro-bo-7JH"/>
+                        <outlet property="searchField" destination="7yK-ek-Z8S" id="UQq-IB-uAN"/>
+                        <outlet property="searchResultsField" destination="X7z-Bv-W3d" id="jfW-f8-sRO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LIz-W5-eEZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2148.8839285714284" y="991.304347826087"/>
+            <point key="canvasLocation" x="2150.7246376811595" y="902.67857142857133"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="YJk-f2-MMm">

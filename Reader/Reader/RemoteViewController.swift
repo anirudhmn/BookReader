@@ -10,9 +10,12 @@ import Foundation
 import UIKit
 import Firebase
 
-class RemoteViewController: UIViewController {
+class RemoteViewController: UIViewController, UISearchBarDelegate {
     
     @IBOutlet var currentPageField: UITextField!
+    @IBOutlet var searchField: UISearchBar!
+    @IBOutlet var searchResultsField: UITextView!
+    
     
     var bookName = String()
     var ref = DatabaseReference()
@@ -26,6 +29,10 @@ class RemoteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        searchField.delegate = self
+        searchResultsField.text = ""
+        searchResultsField.isHidden = true
         
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(sender:)))
         rightSwipe.direction = .right
@@ -43,7 +50,7 @@ class RemoteViewController: UIViewController {
                 let key = snap.key
                 if key == "current" {
                     self.currentPage = Int("\(snap.value ?? 0)")!
-                    self.currentPageField.text = "\(self.currentPage)"
+                    self.currentPageField.text = "\(self.currentPage+1)"
                 }
             }
         })
@@ -51,7 +58,9 @@ class RemoteViewController: UIViewController {
         ref.observe(.childChanged) { (snapshot) in
             if snapshot.key == "current" {
                 self.currentPage = Int("\(snapshot.value ?? 0)")!
-                self.currentPageField.text = "\(self.currentPage)"
+                self.currentPageField.text = "\(self.currentPage+1)"
+            } else if snapshot.key == "searchResults" {
+                self.updateSearch()
             }
         }
         
@@ -61,8 +70,47 @@ class RemoteViewController: UIViewController {
     }
             
     @objc func dismissKeyboard() {
-        currentPageField.text = "\(currentPage)"
+        currentPageField.text = "\(currentPage+1)"
         view.endEditing(true)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if searchBar.text != "" {
+            var v = ["search":""]
+            ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
+                if err != nil {
+                    print(err)
+                    return
+                }
+            })
+            v = ["search":searchBar.text!]
+            ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
+                if err != nil {
+                    print(err)
+                    return
+                }
+            })
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            searchResultsField.isHidden = true
+            dismissKeyboard()
+        }
+    }
+    
+    func updateSearch() {
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            for child in snapshot.children {
+                let snap = child as! DataSnapshot
+                let key = snap.key
+                if key == "searchResults" {
+                    self.searchResultsField.text = "\(snap.value ?? "")"
+                    self.searchResultsField.isHidden = false
+                }
+            }
+        })
     }
     
     @objc func handleSwipe(sender: UISwipeGestureRecognizer) {
@@ -118,7 +166,7 @@ class RemoteViewController: UIViewController {
     @objc func doneButtonAction() {
         if currentPageField.text != "" {
             currentPage = Int(currentPageField.text!) ?? 0
-            let v = ["current":"\(currentPage)", "update":"page"]
+            let v = ["current":"\(currentPage-1)", "update":"page"]
             ref.updateChildValues(v, withCompletionBlock: { (err, ref) in
                 if err != nil {
                     print(err)
