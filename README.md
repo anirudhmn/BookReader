@@ -8,4 +8,4 @@ Add books on your laptop/ipad by clicking the plus sign and selecting your file.
 
 Press the Extract Text button on your laptop/ipad to start reading. Open the app on your phone and select the same book. To flip the pages on your laptop/ipad, simply swipe left or right on your phone (you can also swipe directly on the laptop/iphone if you want).
 
-If you want to skip to a specific page, press the current page number on your phone and enter a page number to flip to.
+If you want to skip to a specific page, press the current page number on your phone and enter a page number to flip to. You can also search for a word or phrase and then skip to that page.
